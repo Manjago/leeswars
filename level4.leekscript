@@ -31,15 +31,18 @@ if (getTP() >= 5) {
   setWeapon(WEAPON_PISTOL) 
   debug("Now tp " + getTP())
   useWeapon(enemy)
+  debug("use weapon")
   weaponUsed = firstTp != getTP()
 }
 
 if (weaponUsed) {
     var oldTp = getTP()
-    while( (oldTp >= 2) && weaponUsed) {
+    while( (getTP()) && weaponUsed) {
       debug("2Now tp " + getTP())
       useWeapon(enemy)
+      debug("use weapon")
       weaponUsed = oldTp != getTP()
+      oldTp = getTP()
     }
 }
 
@@ -61,7 +64,7 @@ function realEnemy() {
 }
 
 function immediateHeal() {
-    if (getTP() >= 2) {
+    if ( (getLife() < getTotalLife() ) && (getTP() >= 2)) {
       useChip(CHIP_BANDAGE)
     }
 }
