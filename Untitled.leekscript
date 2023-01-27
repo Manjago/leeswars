@@ -1,0 +1,64 @@
+/**
+ * Welcome to Leek Wars!
+ * To know how the game works: leekwars.com/en/Game_Rules
+ * To learn the LeekScript language: leekwars.com/encyclopedia/en/Tutorial
+ * To learn more about the available functions: leekwars.com/help/documentation
+**/
+
+global shock_cooldown = -1
+
+if (shock_cooldown == -1) {
+    shock_cooldown = 0
+} else if (shock_cooldown > 0) {
+    shock_cooldown = shock_cooldown - 1
+}
+
+if (getLife() < getTotalLife() * 0.75) {
+    useChip(CHIP_BANDAGE)
+}
+
+setWeapon(WEAPON_PISTOL) // Warning: costs 1 TP
+
+// We get the nearest enemy
+var enemy = realEnemy()
+debug("Enemy found " + enemy)
+
+var targetCell = getCellToUseChip(CHIP_SHOCK, enemy)
+
+if (getLife() < getTotalLife() * 0.5) {
+    moveAwayFrom(enemy)
+} else if (targetCell != null) {
+    debug("Target cell ok " + targetCell)
+    var moved = moveTowardCell(targetCell)
+    debug("Moved to schock cell " +  targetCell + " " + moved + "moves, now my cell " + getCell())
+    if ( (targetCell == getCell()) and (shock_cooldown == 0) ) {
+        debug("use chip")
+        useChip(CHIP_SHOCK, enemy)
+        shock_cooldown = 2
+    } else {
+        debug("My cell " + getCell() + ", shock cell " + targetCell)
+    }
+} else {
+    debug("Target cell not ok")
+    var moved = moveToward(enemy)
+    debug("movet to enemy " + moved)
+}
+
+// We try to shoot him!
+useWeapon(enemy)
+useWeapon(enemy)
+useWeapon(enemy)
+
+function realEnemy() {
+    var pretenders = getAliveEnemies()
+    var realEnemies = arrayFilter(pretenders, function(v) {
+        return getType(v) != ENTITY_CHEST
+    })
+
+    if (isEmpty(realEnemies)) {
+        return getNearestEnemy()
+    } else {
+        return realEnemies[0]
+    }
+
+}
