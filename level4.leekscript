@@ -77,7 +77,7 @@ function strategyRetreat(enemy) {
 function strategyWannaCheap(targetCell, enemy) {
 
     var pretendersPebble = getCellsToUseChip(CHIP_PEBBLE, enemy)
-    var mayPebble = inArray(pretendersPebble, enemy)
+    var mayPebble = (pretendersPebble != null) && inArray(pretendersPebble, enemy)
     debug("may pebble " + mayPebble)
     if (mayPebble) {
         usePebble(enemy)
@@ -90,7 +90,7 @@ function strategyWannaCheap(targetCell, enemy) {
     }   
 
     var pretendersShock = getCellsToUseChip(CHIP_SHOCK, enemy)
-    var allow = inArray(pretendersShock, enemy)
+    var allow =  (pretendersShock != null) && inArray(pretendersShock, enemy)
     if (allow) {
         while(getTP() >= 2) {
            useChip(CHIP_SHOCK, enemy)    
