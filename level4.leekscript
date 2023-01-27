@@ -1,0 +1,66 @@
+/**
+ * Level 4
+**/
+
+
+if (getLife() < getTotalLife() * 0.75) {
+    immediateHeal()
+}
+
+setWeapon(WEAPON_PISTOL) // Warning: costs 1 TP
+
+var enemy = realEnemy()
+
+var targetCell = getCellToUseChip(CHIP_SHOCK, enemy)
+
+if (getLife() < getTotalLife() * 0.5) {
+    strategyRetreat(enemy)
+} else if (targetCell != null) {
+    strategyWannaCheap(targetCell, enemy)
+} else {
+    strategyNoIdea(enemy)
+}
+
+// We try to shoot him!
+useWeapon(enemy)
+useWeapon(enemy)
+useWeapon(enemy)
+
+function realEnemy() {
+    var pretenders = getAliveEnemies()
+    var realEnemies = arrayFilter(pretenders, function(v) {
+        return getType(v) != ENTITY_CHEST
+    })
+
+    if (isEmpty(realEnemies)) {
+        return getNearestEnemy()
+    } else {
+        return realEnemies[0]
+    }
+
+}
+
+function immediateHeal() {
+    useChip(CHIP_BANDAGE)
+}
+
+function strategyRetreat(enemy) {
+    moveAwayFrom(enemy)
+}
+
+function strategyWannaCheap(targetCell, enemy) {
+     debug("Target cell ok " + targetCell)
+    var moved = moveTowardCell(targetCell)
+    debug("Moved to schock cell " +  targetCell + " " + moved + "moves, now my cell " + getCell())
+    if (targetCell == getCell()) {
+        debug("use chip")
+        useChip(CHIP_SHOCK, enemy)
+        debug("My cell " + getCell() + ", shock cell " + targetCell)
+    }   
+}
+
+function strategyNoIdea(enemy) {
+    debug("Target cell not ok")
+    var moved = moveToward(enemy)
+    debug("moved to enemy " + moved)
+}
