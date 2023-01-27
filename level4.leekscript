@@ -5,26 +5,35 @@
 
 if (getLife() < getTotalLife() * 0.75) {
     immediateHeal()
+    debug("Immediate heal, tp " + getTP())
 }
-
-setWeapon(WEAPON_PISTOL) // Warning: costs 1 TP
 
 var enemy = realEnemy()
 
-var targetCell = getCellToUseChip(CHIP_SHOCK, enemy)
+var targetCell = getCellToUseChip(CHIP_PEBBLE, enemy)
 
 if (getLife() < getTotalLife() * 0.5) {
+    debug("strategy retreat")
     strategyRetreat(enemy)
 } else if (targetCell != null) {
+    debug("strategy wanna cheap")
     strategyWannaCheap(targetCell, enemy)
 } else {
+    debug("strategy no idea")
     strategyNoIdea(enemy)
 }
 
-// We try to shoot him!
-useWeapon(enemy)
-useWeapon(enemy)
-useWeapon(enemy)
+
+debug("For pistol " + getTP())
+if (getTP() >= 5) {
+  setWeapon(WEAPON_PISTOL) 
+  useWeapon(enemy)
+}
+
+while(getTP() >= 2) {
+   useWeapon(enemy)
+}
+
 
 function realEnemy() {
     var pretenders = getAliveEnemies()
@@ -41,22 +50,45 @@ function realEnemy() {
 }
 
 function immediateHeal() {
-    useChip(CHIP_BANDAGE)
+    if (getTP() >= 2) {
+      useChip(CHIP_BANDAGE)
+    }
 }
 
 function strategyRetreat(enemy) {
+    immediateHeal()
     moveAwayFrom(enemy)
 }
 
 function strategyWannaCheap(targetCell, enemy) {
-     debug("Target cell ok " + targetCell)
+
+    var pretendersPebble = getCellsToUseChip(CHIP_PEBBLE, enemy)
+    var mayPebble = inArray(pretendersPebble, enemy)
+    debug("may pebble " + mayPebble)
+    if (mayPebble) {
+        usePebble(enemy)
+    }
+
     var moved = moveTowardCell(targetCell)
-    debug("Moved to schock cell " +  targetCell + " " + moved + "moves, now my cell " + getCell())
     if (targetCell == getCell()) {
-        debug("use chip")
-        useChip(CHIP_SHOCK, enemy)
-        debug("My cell " + getCell() + ", shock cell " + targetCell)
+        debug("may pebble again")
+        usePebble(enemy)
     }   
+
+    var pretendersShock = getCellsToUseChip(CHIP_SHOCK, enemy)
+    var allow = inArray(pretendersShock, enemy)
+    if (allow) {
+        while(getTP() >= 2) {
+           useChip(CHIP_SHOCK, enemy)    
+        }
+    }
+
+}
+
+function usePebble(enemy) {
+    if (getTP() >= 2) {
+        useChip(CHIP_PEBBLE, enemy)
+    }
 }
 
 function strategyNoIdea(enemy) {
