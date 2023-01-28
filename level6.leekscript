@@ -2,7 +2,8 @@
  * Level 6
 **/
 
-if (getCooldown(CHIP_PROTEIN) == 0) { // we can use the chip
+if (getCooldown(CHIP_PROTEIN) == 0) { 
+    debug("Use protein")
     useChip(CHIP_PROTEIN, getEntity())
 }
 
@@ -13,7 +14,7 @@ if (getLife() < getTotalLife() * 0.75) {
 
 var enemy = realEnemy()
 
-var targetCell = getCellToUseChip(CHIP_PEBBLE, enemy)
+var targetCell = getCellToUseChip(CHIP_SHOCK, enemy)
 
 if (getLife() < getTotalLife() * 0.5) {
     debug("strategy retreat")
@@ -67,8 +68,11 @@ function realEnemy() {
 }
 
 function immediateHeal() {
-    if ( (getLife() < getTotalLife() ) && (getTP() >= 2)) {
+    if ( (getCooldown(CHIP_BANDAGE) == 0) and (getLife() < getTotalLife() ) and (getTP() >= 2)) {
       useChip(CHIP_BANDAGE)
+      debug("Use bandage, has tp " + getTP())
+    } else {
+      debug("Fail use bandage")
     }
 }
 
@@ -88,8 +92,8 @@ function strategyWannaCheap(targetCell, enemy) {
 
     var moved = moveTowardCell(targetCell)
     if (targetCell == getCell()) {
-        debug("may pebble again")
-        usePebble(enemy)
+        debug("may shock")
+        useShock(enemy)
     }   
 
     var pretendersShock = getCellsToUseChip(CHIP_SHOCK, enemy)
@@ -103,8 +107,20 @@ function strategyWannaCheap(targetCell, enemy) {
 }
 
 function usePebble(enemy) {
-    if (getTP() >= 2) {
+    if ( (getCooldown(CHIP_PEBBLE) == 0) and (getTP() >= 2)) {
         useChip(CHIP_PEBBLE, enemy)
+        debug("Use pebble, now tp " + getTP())
+    } else {
+        debug("Fail use pebble, tp " + getTP())
+    }
+}
+
+function useShock(enemy) {
+    if (getTP() >= 2) {
+        useChip(CHIP_SHOCK, enemy)
+        debug("Use shock, now tp " + getTP())
+    } else {
+        debug("Fail use shock, tp " + getTP())
     }
 }
 
