@@ -84,6 +84,7 @@ function strategyWannaCheap(targetCell, enemy) {
 
     var pretendersPebble = getCellsToUseChip(CHIP_PEBBLE, enemy)
     var mayPebble = (pretendersPebble != null) && inArray(pretendersPebble, enemy)
+    mark(pretendersPebble, getColor(255, 0, 0), 1)
     debug("may pebble " + mayPebble)
     if (mayPebble) {
         usePebble(enemy)
