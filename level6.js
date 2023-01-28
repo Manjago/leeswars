@@ -85,6 +85,7 @@ function strategyWannaCheap(targetCell, enemy) {
     var pretendersPebble = getCellsToUseChip(CHIP_PEBBLE, enemy)
     var mayPebble = (pretendersPebble != null) && inArray(pretendersPebble, enemy)
     mark(pretendersPebble, getColor(255, 0, 0), 1)
+    mark(targetCell, getColor(0, 255, 0), 1)
     debug("may pebble " + mayPebble)
     if (mayPebble) {
         usePebble(enemy)
@@ -97,6 +98,7 @@ function strategyWannaCheap(targetCell, enemy) {
     }
 
     var pretendersShock = getCellsToUseChip(CHIP_SHOCK, enemy)
+    mark(pretendersShock, getColor(0, 0, 1), 1)
     var allow = (pretendersShock != null) && inArray(pretendersShock, enemy)
     if (allow) {
         while (getTP() >= 2) {
