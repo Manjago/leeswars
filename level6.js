@@ -2,6 +2,8 @@
  * Level 6
 **/
 
+setWeapon(WEAPON_PISTOL)
+
 if (getCooldown(CHIP_PROTEIN) == 0) {
     debug("Use protein")
     useChip(CHIP_PROTEIN, getEntity())
@@ -40,12 +42,11 @@ function atEnd() {
 function tryPistol(enemy) {
     var canPistol = canUseWeapon(WEAPON_PISTOL, enemy)
     debug("Pistol status " + canPistol + " " + getTP())
-    if (canPistol and(getTP() >= 5)) {
-        setWeapon(WEAPON_PISTOL)
+    if (canPistol && (getTP() >= 2)) {
         useWeapon(enemy)
         debug("pistol used first, now tp " + getTP())
 
-        while (canUseWeapon(WEAPON_PISTOL, enemy) and(getTP() >= 2) ) {
+        while (canUseWeapon(WEAPON_PISTOL, enemy) && (getTP() >= 2)) {
             useWeapon(enemy)
             debug("pistol used again, now tp " + getTP())
         }
@@ -66,7 +67,7 @@ function realEnemy() {
 }
 
 function immediateHeal() {
-    if ((getCooldown(CHIP_BANDAGE) == 0) and(getLife() < getTotalLife()) and(getTP() >= 2)) {
+    if ((getCooldown(CHIP_BANDAGE) == 0) && (getLife() < getTotalLife()) && (getTP() >= 2)) {
         useChip(CHIP_BANDAGE)
         debug("Use bandage, has tp " + getTP())
     } else {
