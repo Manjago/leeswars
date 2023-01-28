@@ -2,7 +2,7 @@
  * Level 6
 **/
 
-if (getCooldown(CHIP_PROTEIN) == 0) { 
+if (getCooldown(CHIP_PROTEIN) == 0) {
     debug("Use protein")
     useChip(CHIP_PROTEIN, getEntity())
 }
@@ -33,28 +33,28 @@ atEnd()
 
 
 function atEnd() {
-  immediateHeal()
-  debug("Immediate heal at end, tp " + getTP())
+    immediateHeal()
+    debug("Immediate heal at end, tp " + getTP())
 }
 
 function tryPistol(enemy) {
-    var canPistol =  canUseWeapon(WEAPON_PISTOL, enemy)
+    var canPistol = canUseWeapon(WEAPON_PISTOL, enemy)
     debug("Pistol status " + canPistol + " " + getTP())
-    if (canPistol and (getTP() >= 5)) {
-    setWeapon(WEAPON_PISTOL) 
-    useWeapon(enemy)
-    debug("pistol used first, now tp " + getTP())
-
-    while(canUseWeapon(WEAPON_PISTOL, enemy) and (getTP() >= 2) ) {
+    if (canPistol and(getTP() >= 5)) {
+        setWeapon(WEAPON_PISTOL)
         useWeapon(enemy)
-        debug("pistol used again, now tp " + getTP())
-    }    
-}
+        debug("pistol used first, now tp " + getTP())
+
+        while (canUseWeapon(WEAPON_PISTOL, enemy) and(getTP() >= 2) ) {
+            useWeapon(enemy)
+            debug("pistol used again, now tp " + getTP())
+        }
+    }
 }
 
 function realEnemy() {
     var pretenders = getAliveEnemies()
-    var realEnemies = arrayFilter(pretenders, function(v) {
+    var realEnemies = arrayFilter(pretenders, function (v) {
         return getType(v) != ENTITY_CHEST
     })
 
@@ -66,11 +66,11 @@ function realEnemy() {
 }
 
 function immediateHeal() {
-    if ( (getCooldown(CHIP_BANDAGE) == 0) and (getLife() < getTotalLife() ) and (getTP() >= 2)) {
-      useChip(CHIP_BANDAGE)
-      debug("Use bandage, has tp " + getTP())
+    if ((getCooldown(CHIP_BANDAGE) == 0) and(getLife() < getTotalLife()) and(getTP() >= 2)) {
+        useChip(CHIP_BANDAGE)
+        debug("Use bandage, has tp " + getTP())
     } else {
-      debug("Fail use bandage")
+        debug("Fail use bandage")
     }
 }
 
@@ -92,20 +92,20 @@ function strategyWannaCheap(targetCell, enemy) {
     if (targetCell == getCell()) {
         debug("may shock")
         useShock(enemy)
-    }   
+    }
 
     var pretendersShock = getCellsToUseChip(CHIP_SHOCK, enemy)
-    var allow =  (pretendersShock != null) && inArray(pretendersShock, enemy)
+    var allow = (pretendersShock != null) && inArray(pretendersShock, enemy)
     if (allow) {
-        while(getTP() >= 2) {
-           useChip(CHIP_SHOCK, enemy)    
+        while (getTP() >= 2) {
+            useChip(CHIP_SHOCK, enemy)
         }
     }
 
 }
 
 function usePebble(enemy) {
-    if ( (getCooldown(CHIP_PEBBLE) == 0) and (getTP() >= 2)) {
+    if ((getCooldown(CHIP_PEBBLE) == 0) and(getTP() >= 2)) {
         useChip(CHIP_PEBBLE, enemy)
         debug("Use pebble, now tp " + getTP())
     } else {
