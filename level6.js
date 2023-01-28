@@ -43,11 +43,11 @@ function atEnd() {
 function tryPistol(enemy) {
     var canPistol = canUseWeapon(WEAPON_PISTOL, enemy)
     debug("Pistol status " + canPistol + " " + getTP())
-    if (canPistol && (getTP() >= 2)) {
+    if (canPistol && (getTP() >= 3)) {
         useWeapon(enemy)
         debug("pistol used first, now tp " + getTP())
 
-        while (canUseWeapon(WEAPON_PISTOL, enemy) && (getTP() >= 2)) {
+        while (canUseWeapon(WEAPON_PISTOL, enemy) && (getTP() >= 3)) {
             useWeapon(enemy)
             debug("pistol used again, now tp " + getTP())
         }
