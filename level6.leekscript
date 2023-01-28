@@ -28,30 +28,29 @@ if (getLife() < getTotalLife() * 0.5) {
 }
 
 
-debug("For pistol " + getTP())
-var weaponUsed = false
-var firstTp = getTP()
-if (getTP() >= 5) {
-  setWeapon(WEAPON_PISTOL) 
-  debug("Now tp " + getTP())
-  useWeapon(enemy)
-  debug("use weapon")
-  weaponUsed = firstTp != getTP()
+tryPistol(enemy)
+atEnd()
+
+
+function atEnd() {
+  immediateHeal()
+  debug("Immediate heal at end, tp " + getTP())
 }
 
-if (weaponUsed) {
-    var oldTp = getTP()
-    while( (getTP()) && weaponUsed) {
-      debug("2Now tp " + getTP())
-      useWeapon(enemy)
-      debug("use weapon")
-      weaponUsed = oldTp != getTP()
-      oldTp = getTP()
-    }
-}
+function tryPistol(enemy) {
+    var canPistol =  canUseWeapon(WEAPON_PISTOL, enemy)
+    debug("Pistol status " + canPistol + " " + getTP())
+    if (canPistol and (getTP() >= 5)) {
+    setWeapon(WEAPON_PISTOL) 
+    useWeapon(enemy)
+    debug("pistol used first, now tp " + getTP())
 
-immediateHeal()
-debug("Immediate heal at end, tp " + getTP())
+    while(canUseWeapon(WEAPON_PISTOL, enemy) and (getTP() >= 2) ) {
+        useWeapon(enemy)
+        debug("pistol used again, now tp " + getTP())
+    }    
+}
+}
 
 function realEnemy() {
     var pretenders = getAliveEnemies()
@@ -64,7 +63,6 @@ function realEnemy() {
     } else {
         return realEnemies[0]
     }
-
 }
 
 function immediateHeal() {
