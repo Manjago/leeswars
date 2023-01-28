@@ -116,12 +116,12 @@ function usePebble(enemy) {
 }
 
 function useShock(enemy) {
-    if (getTP() >= 2) {
+    while(getTP() >= 2) {
         useChip(CHIP_SHOCK, enemy)
         debug("Use shock, now tp " + getTP())
-    } else {
-        debug("Fail use shock, tp " + getTP())
     }
+
+    debug("Stop use shock, tp " + getTP())
 }
 
 function strategyNoIdea(enemy) {
