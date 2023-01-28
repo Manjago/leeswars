@@ -2,6 +2,9 @@
  * Level 4
 **/
 
+if (getCooldown(CHIP_PROTEIN) == 0) { // we can use the chip
+    useChip(CHIP_PROTEIN, getEntity())
+}
 
 if (getLife() < getTotalLife() * 0.75) {
     immediateHeal()
