@@ -1,0 +1,115 @@
+/**
+ * Level 6
+**/
+
+if (getCooldown(CHIP_PROTEIN) == 0) { // we can use the chip
+    useChip(CHIP_PROTEIN, getEntity())
+}
+
+if (getLife() < getTotalLife() * 0.75) {
+    immediateHeal()
+    debug("Immediate heal, tp " + getTP())
+}
+
+var enemy = realEnemy()
+
+var targetCell = getCellToUseChip(CHIP_PEBBLE, enemy)
+
+if (getLife() < getTotalLife() * 0.5) {
+    debug("strategy retreat")
+    strategyRetreat(enemy)
+} else if (targetCell != null) {
+    debug("strategy wanna cheap")
+    strategyWannaCheap(targetCell, enemy)
+} else {
+    debug("strategy no idea")
+    strategyNoIdea(enemy)
+}
+
+
+debug("For pistol " + getTP())
+var weaponUsed = false
+var firstTp = getTP()
+if (getTP() >= 5) {
+  setWeapon(WEAPON_PISTOL) 
+  debug("Now tp " + getTP())
+  useWeapon(enemy)
+  debug("use weapon")
+  weaponUsed = firstTp != getTP()
+}
+
+if (weaponUsed) {
+    var oldTp = getTP()
+    while( (getTP()) && weaponUsed) {
+      debug("2Now tp " + getTP())
+      useWeapon(enemy)
+      debug("use weapon")
+      weaponUsed = oldTp != getTP()
+      oldTp = getTP()
+    }
+}
+
+immediateHeal()
+debug("Immediate heal at end, tp " + getTP())
+
+function realEnemy() {
+    var pretenders = getAliveEnemies()
+    var realEnemies = arrayFilter(pretenders, function(v) {
+        return getType(v) != ENTITY_CHEST
+    })
+
+    if (isEmpty(realEnemies)) {
+        return getNearestEnemy()
+    } else {
+        return realEnemies[0]
+    }
+
+}
+
+function immediateHeal() {
+    if ( (getLife() < getTotalLife() ) && (getTP() >= 2)) {
+      useChip(CHIP_BANDAGE)
+    }
+}
+
+function strategyRetreat(enemy) {
+    immediateHeal()
+    moveAwayFrom(enemy)
+}
+
+function strategyWannaCheap(targetCell, enemy) {
+
+    var pretendersPebble = getCellsToUseChip(CHIP_PEBBLE, enemy)
+    var mayPebble = (pretendersPebble != null) && inArray(pretendersPebble, enemy)
+    debug("may pebble " + mayPebble)
+    if (mayPebble) {
+        usePebble(enemy)
+    }
+
+    var moved = moveTowardCell(targetCell)
+    if (targetCell == getCell()) {
+        debug("may pebble again")
+        usePebble(enemy)
+    }   
+
+    var pretendersShock = getCellsToUseChip(CHIP_SHOCK, enemy)
+    var allow =  (pretendersShock != null) && inArray(pretendersShock, enemy)
+    if (allow) {
+        while(getTP() >= 2) {
+           useChip(CHIP_SHOCK, enemy)    
+        }
+    }
+
+}
+
+function usePebble(enemy) {
+    if (getTP() >= 2) {
+        useChip(CHIP_PEBBLE, enemy)
+    }
+}
+
+function strategyNoIdea(enemy) {
+    debug("Target cell not ok")
+    var moved = moveToward(enemy)
+    debug("moved to enemy " + moved)
+}
