@@ -38,7 +38,14 @@ function realEnemy() {
 }
 
 function tryMove(enemy) {
-    moveToward(enemy)
+    var mpUsed = 1;
+    while (getMP() > 0
+        && !inWeaponRange(enemy, getWeapon())
+        && mpUsed > 0) {
+        debug("In range: " + inWeaponRange(enemy, getWeapon()));
+        mpUsed = moveToward(enemy, 1);
+        debug(" > MOVE");
+    }
 }
 
 function inWeaponRange(enemy, weapon) {
@@ -87,7 +94,11 @@ function getBestWeapon(enemy) {
         }
     }
 
-    debug("BEST: " + getWeaponName(best) + ", with " + bestDamage + " average for " + bestTurns + " turns");
+    if (best != null) {
+        debug("BEST: " + getWeaponName(best) + ", with " + bestDamage + " average for " + bestTurns + " turns");
+    } else {
+        debug("No best weapon")
+    }
 
     return best;
 }
