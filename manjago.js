@@ -27,3 +27,11 @@ function realEnemy() {
 function tryMove(enemy) {
     moveToward(enemy)
 }
+
+function inWeaponRange(enemy, weapon)
+{
+	var me = getCell();
+	var them = getCell(enemy);
+	return lineOfSight(me, them)
+		&& getCellDistance(me, them) <= getWeaponMaxRange(weapon);
+}
