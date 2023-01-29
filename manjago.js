@@ -10,7 +10,7 @@ var bestWeapon = getBestWeapon(enemy);
 if (bestWeapon != null)
     equipWeapon(bestWeapon);
 else if (getWeapon() == null)
-    equipWeapon(WEAPON_PISTOL);
+    equipWeapon(WEAPON_MACHINE_GUN);
 
 debug("==== Movement phase");
 tryMove(enemy);

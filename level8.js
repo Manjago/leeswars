@@ -2,11 +2,14 @@
  * Level 8
 **/
 
+global turn = 0;
 
-if (getCooldown(CHIP_PROTEIN) == 0) {
-    debug("Use protein")
-    useChip(CHIP_PROTEIN, getEntity())
-}
+turn++;
+debug("=== Turn " + turn);
+
+
+debug("=== Amplify phase " + turn + " " + getTP());
+amplifyPhase();
 
 if (getLife() < getTotalLife() * 0.75) {
     immediateHeal()
@@ -15,7 +18,7 @@ if (getLife() < getTotalLife() * 0.75) {
 
 var enemy = realEnemy()
 
-var targetCell = getCellToUseChip(CHIP_SHOCK, enemy)
+var targetCell = getCellToUseChip(CHIP_PEBBLE, enemy)
 mark(targetCell, getColor(255, 0, 0), 1)
 
 if (getLife() < getTotalLife() * 0.5) {
@@ -33,6 +36,16 @@ if (getLife() < getTotalLife() * 0.5) {
 tryPistol(enemy)
 atEnd()
 
+
+function amplifyPhase() {
+    var proteinCoolDown = getCooldown(CHIP_PROTEIN);
+    if (proteinCoolDown == 0) {
+        debug("Use protein");
+        useChip(CHIP_PROTEIN, getEntity());
+    } else {
+        debug("Protein cooldown " + proteinCoolDown)
+    }
+}
 
 function atEnd() {
     immediateHeal()
@@ -96,11 +109,11 @@ function strategyWannaCheap(targetCell, enemy) {
         useShock(enemy)
     }
 
-    var pretendersShock = getCellsToUseChip(CHIP_SHOCK, enemy)
+    var pretendersShock = getCellsToUseChip(CHIP_PEBBLE, enemy)
     var allow = (pretendersShock != null) && inArray(pretendersShock, enemy)
     if (allow) {
         while (getTP() >= 2) {
-            useChip(CHIP_SHOCK, enemy)
+            useChip(CHIP_PEBBLE, enemy)
         }
     }
 
