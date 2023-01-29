@@ -116,7 +116,7 @@ function usePebble(enemy) {
 }
 
 function useShock(enemy) {
-    while(getTP() >= 2) {
+    while(getTP() >= 2 && (getLife(enemy) != 0)) {
         useChip(CHIP_SHOCK, enemy)
         debug("Use shock, now tp " + getTP())
     }
