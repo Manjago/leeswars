@@ -16,8 +16,10 @@ debug("==== Movement phase");
 tryMove(enemy);
 
 debug("==== Action phase");
-actionLoop(enemy)
+var shouldFlee = actionLoop(enemy)
 
+debug("==== Flee phase");
+tryFlee(enemy, shouldFlee)
 
 debug(getOperations() + " operations");
 
@@ -136,6 +138,7 @@ function actionLoop(enemy) {
         if (didSomething) // I am very danger
             shouldFlee = false;
     }
+    return shouldFlee
 }
 
 function attack(enemy) {
@@ -147,4 +150,39 @@ function attack(enemy) {
 function heal() {
     debug(" > HEAL");
     return useChip(CHIP_BANDAGE) == USE_SUCCESS;
+}
+
+function tryFlee(enemy, shouldFlee) {
+    var mpUsed = 1;
+    while (getMP() > 0 && mpUsed > 0) {
+        mpUsed = 0;
+
+        var enemyDist = getCellDistance(getCell(), getCell(enemy)) + getMP(enemy);
+        debug("Enemy weapon range: " + getWeaponMaxRange(getWeapon(enemy)));
+        debug("Cell distance to enemy: " + (enemyDist - getMP(enemy)));
+        debug("Safe distance: " + enemyDist);
+        debug("Distance to enemy: " + getDistance(getCell(), getCell(enemy)));
+        debug("In range to shoot: " + inWeaponRange(enemy, getWeapon()));
+
+        // Run away
+        if (shouldFlee)
+            mpUsed = moveAwayFrom(enemy);
+
+        // Attempt to counter weapons with min range
+        if ((getWeaponMinRange(getWeapon(enemy)) > 1
+            && getWeaponMinRange(getWeapon(enemy)) > enemyDist))
+            mpUsed = moveToward(enemy, 1);
+        else if (getWeaponMaxRange(getWeapon(enemy)) < enemyDist)
+            mpUsed = moveAwayFrom(enemy, 1);
+        else if (getChipMaxRange(CHIP_SPARK) < enemyDist)
+            mpUsed = moveAwayFrom(enemy, 1);
+        else
+            mpUsed = moveAwayFrom(enemy); // Run
+
+        // else
+        // 	   moveToward(enemy, 1); // maybe not a good idea :(
+
+        if (mpUsed > 0)
+            debug(" > MOVE");
+    }
 }
