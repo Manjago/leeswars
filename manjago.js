@@ -174,8 +174,6 @@ function tryFlee(enemy, shouldFlee) {
             mpUsed = moveToward(enemy, 1);
         else if (getWeaponMaxRange(getWeapon(enemy)) < enemyDist)
             mpUsed = moveAwayFrom(enemy, 1);
-        else if (getChipMaxRange(CHIP_SPARK) < enemyDist)
-            mpUsed = moveAwayFrom(enemy, 1);
         else
             mpUsed = moveAwayFrom(enemy); // Run
 
