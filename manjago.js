@@ -144,7 +144,7 @@ function actionLoop(enemy) {
 function attack(enemy) {
     debug(" > ATTACK");
     return useWeapon(enemy) == USE_SUCCESS
-        || useChip(CHIP_SPARK, enemy) == USE_SUCCESS;
+        || useChip(CHIP_SHOCK, enemy) == USE_SUCCESS;
 }
 
 function heal() {
@@ -173,6 +173,8 @@ function tryFlee(enemy, shouldFlee) {
             && getWeaponMinRange(getWeapon(enemy)) > enemyDist))
             mpUsed = moveToward(enemy, 1);
         else if (getWeaponMaxRange(getWeapon(enemy)) < enemyDist)
+            mpUsed = moveAwayFrom(enemy, 1);
+        else if (getChipMaxRange(CHIP_SHOCK) < enemyDist)
             mpUsed = moveAwayFrom(enemy, 1);
         else
             mpUsed = moveAwayFrom(enemy); // Run
