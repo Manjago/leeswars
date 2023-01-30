@@ -9,6 +9,11 @@ if (getCooldown(CHIP_PROTEIN) == 0) {
     useChip(CHIP_PROTEIN, getEntity())
 }
 
+if (getCooldown(CHIP_HELMET) == 0) {
+    debug("Use helmet")
+    useChip(CHIP_HELMET, getEntity())
+}
+
 if (getLife() < getTotalLife() * 0.75) {
     immediateHeal()
     debug("Immediate heal, tp " + getTP())
